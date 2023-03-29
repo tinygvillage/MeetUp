@@ -9,6 +9,8 @@ const cookieParser = require('cookie-parser');
 const { environment } = require('./config');
 const isProduction = environment === 'production';
 
+const routes = require('./routes');
+
 const app = express();
 
 app.use(morgan('dev')); // for logging information about request and responses
@@ -40,9 +42,7 @@ app.use(
     })
 );
 
-
-const routes = require('./routes');
-
+// put all routes below middleware
 app.use(routes);
 
 
