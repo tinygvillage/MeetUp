@@ -12,6 +12,11 @@ const isProduction = environment === 'production';
 const routes = require('./routes');
 const { ValidationError } = require('sequelize');
 
+const jwt = require('jsonwebtoken');
+const token = jwt.sign(payload, secret, options);
+
+const bcrypt = require('bcryptjs');
+
 const app = express();
 
 app.use(morgan('dev')); // for logging information about request and responses
@@ -59,7 +64,7 @@ app.use((_req, _res, next) => {
 //Process sequelize errors
 app.use((err, _req, _res, next) => {
     // check if error is a Sequelize error:
-    if (err instanceof ValidationError){
+    if (err instanceof ValidationError) {
         let errors = {};
         for (let error of err.errors) {
             error[error.path] = error.message;
@@ -67,7 +72,7 @@ app.use((err, _req, _res, next) => {
         err.title = 'Validation error';
         err.errors = errors;
     }
-    next (err);
+    next(err);
 });
 
 // Error formatter
