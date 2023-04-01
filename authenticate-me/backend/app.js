@@ -12,8 +12,9 @@ const isProduction = environment === 'production';
 const routes = require('./routes');
 const { ValidationError } = require('sequelize');
 
+// i think i added this from reading not directions
 const jwt = require('jsonwebtoken');
-const token = jwt.sign(payload, secret, options);
+// const token = jwt.sign(payload, secret, options);
 
 const bcrypt = require('bcryptjs');
 
