@@ -45,8 +45,14 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     }, {
-    sequelize,
-    modelName: 'User',
+      sequelize,
+      modelName: 'User',
+      defaultScope: {
+        attributes: {
+          exclude: ["hashedPassword", "updatedAt", "createdAt", "email"]
+        }
+      },
+      scopes: {},
   });
   return User;
 };
