@@ -11,7 +11,15 @@
     "start": "npm start --prefix backend",
     "build": "npm run --prefix backend build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinygvillage/MeetUp.git"
+  },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tinygvillage/MeetUp/issues"
+  },
+  "homepage": "https://github.com/tinygvillage/MeetUp#readme"
 }
