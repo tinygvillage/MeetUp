@@ -33,14 +33,16 @@ const validateSignup = [
 
 // signup endpoint
 router.post('', validateSignup, async (req, res, next) => {
-    const { email, password, username } = req.body;
+    const { firstName, lastName, email, password, username } = req.body;
     const hashedPassword = bcrypt.hashSync(password);
 
-    const newUser = await User.create({ username, email, hashedPassword });
+    const newUser = await User.create({ firstName, lastName, username, email, hashedPassword });
 
     // create a safeUser object to house frontend viewable data about new user
     const safeUser = {
         id: newUser.id,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
         email: newUser.email,
         username: newUser.username
     };
