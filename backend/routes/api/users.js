@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User } = require('../../db/models');
+const { Op } = require('sequelize');
 
 const router = express.Router();
 
@@ -24,6 +25,14 @@ const validateSignup = [
         .not()
         .isEmail()
         .withMessage('Username cannot be an email.'),
+    check('firstName')
+        .not()
+        .isEmail()
+        .withMessage('firstName cannot be an email.'),
+    check('lastName')
+        .not()
+        .isEmail()
+        .withMessage('lastName cannot be an email.'),
     check('password')
         .exists({ checkFalsy: true })
         .isLength({ min: 6 })
@@ -36,22 +45,35 @@ router.post('', validateSignup, async (req, res, next) => {
     const { firstName, lastName, email, password, username } = req.body;
     const hashedPassword = bcrypt.hashSync(password);
 
-    const newUser = await User.create({ firstName, lastName, username, email, hashedPassword });
+    const findUser = await User.findOne({
+        where: {
+            [Op.or]: {
+                username,
+                email
+            }
+        }
+    })
 
-    // create a safeUser object to house frontend viewable data about new user
-    const safeUser = {
-        id: newUser.id,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        email: newUser.email,
-        username: newUser.username
-    };
+    if (findUser) {
+        return res.status(403).json({ message: "Username or Email already exists" })
+    } else {
+        const newUser = await User.create({ firstName, lastName, username, email, hashedPassword });
 
-    await setTokenCookie(res, safeUser)
+        const token = await setTokenCookie(res, safeUser)
+        // create a safeUser object to house frontend viewable data about new user
+        const safeUser = {
+            id: newUser.id,
+            firstName: newUser.firstName,
+            lastName: newUser.lastName,
+            email: newUser.email,
+            username: newUser.username,
+            token: token
+        };
 
-    // return the user with the safeUser object
-    return res.json({ user: safeUser });
 
+        // return the user with the safeUser object
+        return res.json({ user: safeUser});
+    }
 });
 
 
