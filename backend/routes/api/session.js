@@ -3,7 +3,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
 const { User } = require('../../db/models');
 
 const { check } = require('express-validator');
@@ -22,6 +22,7 @@ const validateLogin = [
     handleValidationErrors
 ];
 
+// Login
 // this is where the user is submitting a post request to the router with their username/email & pcode
 router.post('/', validateLogin, async (req, res, next) => {
 
@@ -45,17 +46,20 @@ router.post('/', validateLogin, async (req, res, next) => {
         return next(err);
     }
 
+
     const safeUser = {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        username: user.username
+        username: user.username,
+        token: ""
     };
 
     await setTokenCookie(res, safeUser);
 
     return res.json({
+        message: "Logged in:",
         user: safeUser
     });
 
@@ -66,8 +70,7 @@ router.delete('/', (_req, res) => {
     return res.json({ message: 'success' });
 });
 
-router.get('/', (req, res) => {
-
+router.get('/', requireAuth, async (req, res) => {
     const { user } = req;
 
     if (user) {
@@ -78,8 +81,11 @@ router.get('/', (req, res) => {
             email: user.email,
             username: user.username
         };
-        return res.json({ user: safeUser });
+        const token = await setTokenCookie(res, user);
+
+        return res.json({ user: safeUser, token: token });
     } else return res.json({ user: null })
 });
+
 
 module.exports = router;
