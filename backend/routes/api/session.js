@@ -1,50 +1,39 @@
 //holds the resources for the route paths beginning with /api/session
 const express = require('express');
-const { Op } = require('sequelize');
-const bcrypt = require('bcryptjs');
-
-const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
-const { User } = require('../../db/models');
-
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
-
 const router = express.Router();
 
-const validateLogin = [
-    check('credential')
-        .exists({ checkFalsy: true })
-        .notEmpty()
-        .withMessage('Please provide a valid email or username.'),
-    check('password')
-        .exists({ checkFalsy: true })
-        .withMessage('Please provide a password.'),
-    handleValidationErrors
-];
+const bcrypt = require('bcryptjs');
+const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
+const { validateLogin, authorizedUser } = require('../../utils/validation');
+
+const { User } = require('../../db/models');
+const { Op } = require('sequelize');
 
 // Login
 // this is where the user is submitting a post request to the router with their username/email & pcode
 router.post('/', validateLogin, async (req, res, next) => {
 
     // deconstruct the credential & password from the request body
-    const { credential, password } = req.body;
+    // const { credential, password } = req.body;
 
-    let user = await User.unscoped().findOne({
-        where: {
-            [Op.or]: {
-                username: credential,
-                email: credential
-            }
-        }
-    })
+    const user = await authorizedUser(req, res, next);
 
-    if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-        const err = new Error("Login failed");
-        err.status = 401;
-        err.title = 'Login failed';
-        err.errors = { credential: 'The provided credentials are invalid.' }
-        return next(err);
-    }
+    // await User.unscoped().findOne({
+    //     where: {
+    //         [Op.or]: {
+    //             username: credential,
+    //             email: credential
+    //         }
+    //     }
+    // })
+
+    // if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
+    //     const err = new Error("Login failed");
+    //     err.status = 401;
+    //     err.title = 'Login failed';
+    //     err.errors = { credential: 'The provided credentials are invalid.' }
+    //     return next(err);
+    // }
 
 
     const safeUser = {
@@ -52,8 +41,7 @@ router.post('/', validateLogin, async (req, res, next) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        username: user.username,
-        token: ""
+        username: user.username
     };
 
     await setTokenCookie(res, safeUser);
@@ -73,6 +61,8 @@ router.delete('/', (_req, res) => {
 router.get('/', requireAuth, async (req, res) => {
     const { user } = req;
 
+    await setTokenCookie(res, user);
+
     if (user) {
         const safeUser = {
             id: user.id,
@@ -81,9 +71,8 @@ router.get('/', requireAuth, async (req, res) => {
             email: user.email,
             username: user.username
         };
-        const token = await setTokenCookie(res, user);
 
-        return res.json({ user: safeUser, token: token });
+        return res.json({ user: safeUser });
     } else return res.json({ user: null })
 });
 
