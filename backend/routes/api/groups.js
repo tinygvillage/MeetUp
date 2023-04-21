@@ -7,15 +7,17 @@ const { Op } = require('sequelize');
 const router = express.Router();
 
 const { check } = require('express-validator');
-const { authorizedUser, handleValidationErrors, validateGroupCreation } = require('../../utils/validation');
+const { authorizedUser, validateGroupCreation } = require('../../utils/validation');
 
+const { Group, User } = require('../../db/models');
 
-
-router.post('/', [validateGroupCreation], async (req, res, next) => {
-    const user = await authorizedUser(req, res, next);
+// need requirAuth to verify user IS logged in
+router.post('/', requireAuth, validateGroupCreation, async (req, res, next) => {
+    // const { user } = req; // not necessary because requireAuth verified user already
+    // const user = await authorizedUser(req, res, next);
     const { name, about, type, private, city, state } = req.body;
 
-    const findGroup = await group.findOne({
+    const findGroup = await Group.findOne({
         where: {
             name
         }
@@ -27,6 +29,7 @@ router.post('/', [validateGroupCreation], async (req, res, next) => {
 
     else {
         const newGroup = await Group.create({
+            organizerId: req.user.id,
             name,
             about,
             type,

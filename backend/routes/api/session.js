@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const bcrypt = require('bcryptjs');
-const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
+const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { validateLogin, authorizedUser } = require('../../utils/validation');
 
 const { User } = require('../../db/models');
@@ -34,7 +34,6 @@ router.post('/', validateLogin, async (req, res, next) => {
     //     err.errors = { credential: 'The provided credentials are invalid.' }
     //     return next(err);
     // }
-
 
     const safeUser = {
         id: user.id,
