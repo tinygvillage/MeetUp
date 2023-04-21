@@ -43,5 +43,14 @@ router.post('/', requireAuth, validateGroupCreation, async (req, res, next) => {
     }
 })
 
+router.get('', async (req, res, next) => {
+
+    const Groups = await Group.unscoped().findAll();
+    
+
+    if (!Groups) next(err);
+
+    res.status(200).json({ Groups })
+})
 
 module.exports = router;
