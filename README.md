@@ -51,15 +51,28 @@ correct role(s) or permission(s).
     }
     ```
 
-### Get the Current User
+### Sign Up a User
 
-Returns the information about the current user that is logged in.
+Creates a new user, logs them in as the current user, and returns the current
+user's information.
 
-* Require Authentication: true
+* Require Authentication: false
 * Request
-  * Method: GET
-  * URL: /api/session
-  * Body: none
+  * Method: POST
+  * URL: /api/users
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      "firstName": "John",
+      "lastName": "Smith",
+      "email": "john.smith@gmail.com",
+      "username": "johnsmith",
+      "password": "secret password"
+    }
+    ```
 
 * Successful Response
   * Status Code: 200
@@ -69,12 +82,45 @@ Returns the information about the current user that is logged in.
 
     ```json
     {
-      "user": {
-        "id": 1,
-        "firstName": "John",
-        "lastName": "Smith",
-        "email": "john.smith@gmail.com",
-        "username": "JohnSmith"
+      "id": 1,
+      "firstName": "John",
+      "lastName": "Smith",
+      "email": "john.smith@gmail.com",
+      "username": "johnsmith",
+      "token": ""
+    }
+    ```
+
+* Error response: User already exists with the specified email
+  * Status Code: 403
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      "message": "User already exists",
+      "statusCode": 403,
+      "errors": {
+        "email": "User with that email already exists"
+      }
+    }
+    ```
+
+* Error response: Body validation errors
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      "message": "Validation error",
+      "statusCode": 400,
+      "errors": {
+        "email": "Invalid email",
+        "firstName": "First Name is required",
+        "lastName": "Last Name is required"
       }
     }
     ```
@@ -94,7 +140,7 @@ information.
 
     ```json
     {
-      "email": "john.smith@gmail.com",
+      "credential": "john.smith@gmail.com",
       "password": "secret password"
     }
     ```
@@ -147,27 +193,15 @@ information.
     }
     ```
 
-### Sign Up a User
+### Get the Current User
 
-Creates a new user, logs them in as the current user, and returns the current
-user's information.
+Returns the information about the current user that is logged in.
 
-* Require Authentication: false
+* Require Authentication: true
 * Request
-  * Method: POST
-  * URL: /api/users
-  * Headers:
-    * Content-Type: application/json
-  * Body:
-
-    ```json
-    {
-      "firstName": "John",
-      "lastName": "Smith",
-      "email": "john.smith@gmail.com",
-      "password": "secret password"
-    }
-    ```
+  * Method: GET
+  * URL: /api/session
+  * Body: none
 
 * Successful Response
   * Status Code: 200
@@ -177,31 +211,63 @@ user's information.
 
     ```json
     {
-      "id": 1,
-      "firstName": "John",
-      "lastName": "Smith",
-      "email": "john.smith@gmail.com",
-      "token": ""
+      "user": {
+        "id": 1,
+        "firstName": "John",
+        "lastName": "Smith",
+        "email": "john.smith@gmail.com",
+        "username": "JohnSmith"
+      }
     }
     ```
 
-* Error response: User already exists with the specified email
-  * Status Code: 403
+## GROUPS
+
+### Create a Group
+
+Creates and returns a new group.
+
+* Require Authentication: true
+* Request
+  * Method: POST
+  * URL: /api/groups
   * Headers:
     * Content-Type: application/json
   * Body:
 
     ```json
     {
-      "message": "User already exists",
-      "statusCode": 403,
-      "errors": {
-        "email": "User with that email already exists"
-      }
+      "name": "Evening Tennis on the Water",
+      "about": "Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.",
+      "type": "In person",
+      "private": true,
+      "city": "New York",
+      "state": "NY",
     }
     ```
 
-* Error response: Body validation errors
+* Successful Response
+  * Status Code: 201
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      "id": 1,
+      "organizerId": 1,
+      "name": "Evening Tennis on the Water",
+      "about": "Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.",
+      "type": "In person",
+      "private": true,
+      "city": "New York",
+      "state": "NY",
+      "createdAt": "2021-11-19 20:39:36",
+      "updatedAt": "2021-11-19 20:39:36"
+    }
+    ```
+
+* Error Response: Body validation error
   * Status Code: 400
   * Headers:
     * Content-Type: application/json
@@ -209,17 +275,18 @@ user's information.
 
     ```json
     {
-      "message": "Validation error",
+      "message": "Validation Error",
       "statusCode": 400,
       "errors": {
-        "email": "Invalid email",
-        "firstName": "First Name is required",
-        "lastName": "Last Name is required"
+        "name": "Name must be 60 characters or less",
+        "about": "About must be 50 characters or more",
+        "type": "Type must be 'Online' or 'In person'",
+        "private": "Private must be a boolean",
+        "city": "City is required",
+        "state": "State is required",
       }
     }
     ```
-
-## GROUPS
 
 ### Get all Groups
 
@@ -365,71 +432,6 @@ Returns the details of a group specified by its id.
     {
       "message": "Group couldn't be found",
       "statusCode": 404
-    }
-    ```
-
-### Create a Group
-
-Creates and returns a new group.
-
-* Require Authentication: true
-* Request
-  * Method: POST
-  * URL: /api/groups
-  * Headers:
-    * Content-Type: application/json
-  * Body:
-
-    ```json
-    {
-      "name": "Evening Tennis on the Water",
-      "about": "Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.",
-      "type": "In person",
-      "private": true,
-      "city": "New York",
-      "state": "NY",
-    }
-    ```
-
-* Successful Response
-  * Status Code: 201
-  * Headers:
-    * Content-Type: application/json
-  * Body:
-
-    ```json
-    {
-      "id": 1,
-      "organizerId": 1,
-      "name": "Evening Tennis on the Water",
-      "about": "Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.",
-      "type": "In person",
-      "private": true,
-      "city": "New York",
-      "state": "NY",
-      "createdAt": "2021-11-19 20:39:36",
-      "updatedAt": "2021-11-19 20:39:36"
-    }
-    ```
-
-* Error Response: Body validation error
-  * Status Code: 400
-  * Headers:
-    * Content-Type: application/json
-  * Body:
-
-    ```json
-    {
-      "message": "Validation Error",
-      "statusCode": 400,
-      "errors": {
-        "name": "Name must be 60 characters or less",
-        "about": "About must be 50 characters or more",
-        "type": "Type must be 'Online' or 'In person'",
-        "private": "Private must be a boolean",
-        "city": "City is required",
-        "state": "State is required",
-      }
     }
     ```
 
