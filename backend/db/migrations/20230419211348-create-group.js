@@ -2,41 +2,50 @@
 /** @type {import('sequelize-cli').Migration} */
 
 let options = {};
-options.tableName = 'Users'; // added april 19, 2023
+options.tableName = 'Groups'; // added april 19, 2023
 
-if (process.env.NODE_ENV === 'production'){
+if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
 }
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('Groups', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      firstName: {
-        type: Sequelize.STRING(30),
+      organizerId: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        reference: { model: "Users", key: "id" },
+        onDelete: 'CASCADE'
       },
-      lastName: {
-        type: Sequelize.STRING(30),
-        allowNull: false,
-      },
-      username: {
+      name: {
         type: Sequelize.STRING(30),
         allowNull: false,
         unique: true
       },
-      email: {
-        type: Sequelize.STRING(256),
-        allowNull: false,
-        unique: true
+      about: {
+        type: Sequelize.TEXT,
+        allowNull: false
       },
-      hashedPassword: {
-        type: Sequelize.STRING.BINARY,
+      type: {
+        type: Sequelize.ENUM("Online", "In Person"),
+        defaultValue: null
+      },
+      private: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
+      },
+      city: {
+        type: Sequelize.STRING(30),
+        allowNull: false
+      },
+      state: {
+        type: Sequelize.STRING(25),
         allowNull: false
       },
       createdAt: {
@@ -49,10 +58,9 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    }, options);
+    });
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = "Users";
-    return await queryInterface.dropTable(options);
+    await queryInterface.dropTable('Groups');
   }
 };
