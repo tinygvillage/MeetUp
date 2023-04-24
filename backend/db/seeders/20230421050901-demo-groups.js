@@ -7,8 +7,6 @@ if (process.env.NODE_ENV === 'production') {
 
 /** @type {import('sequelize-cli').Migration} */
 
-const { Op } = require('sequelize');
-
 const groups = [
   {
     "organizerId": "1",
@@ -16,8 +14,8 @@ const groups = [
     "about": "A network of individuals that have committed themselves to the refusion lifestyle and practices.",
     "type": "In person",
     "private": true,
-    "city": "New York",
-    "state": "NY",
+    "city": "Arcata",
+    "state": "CA",
   },
   {
     "organizerId": "2",
@@ -37,14 +35,25 @@ const groups = [
     "city": "Everywhere",
     "state": "Universe",
   },
+  {
+    "organizerId": "4",
+    "name": "Movement Lab",
+    "about": "Coming together to share in communal yoga class.",
+    "type": "In Person",
+    "private": false,
+    "city": "Arcata",
+    "state": "CA",
+  },
 ]
+
+options.tableName = "Groups"
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('Groups', groups)
+    await queryInterface.bulkInsert(options, groups)
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Groups', { [Op.or]: groups })
+    await queryInterface.bulkDelete(options, groups)
   }
 };
