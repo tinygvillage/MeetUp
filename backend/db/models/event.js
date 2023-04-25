@@ -28,6 +28,8 @@ module.exports = (sequelize, DataTypes) => {
         through: 'Attendance',
         foreignKey: 'eventId',
         otherKey: 'userId',
+        onDelete: "CASCADE",
+        hooks: true
       })
     }
   }
