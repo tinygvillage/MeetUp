@@ -26,12 +26,11 @@ module.exports = {
         hooks: true
       },
       url: {
-        type: Sequelize.NUMBER
-      },
-      url: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       preview: {
+        allowNull: false,
         type: Sequelize.BOOLEAN
       },
       createdAt: {
@@ -47,6 +46,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
+    options.tableName = 'EventImages';
     await queryInterface.dropTable(options);
   }
 };

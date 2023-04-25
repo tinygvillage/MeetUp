@@ -7,8 +7,6 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
 }
 
-options.tableName = 'Memberships';
-
 module.exports = {
 
   async up(queryInterface, Sequelize) {
@@ -21,21 +19,21 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        unique: true,
+        // allowNull: false,
         references: { model: "Users", key: "id" },
-        onDelete: "CASCADE"
+        onDelete: "CASCADE",
+        hooks: true
       },
       groupId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        // allowNull: false,
         references: { model: "Groups", key: "id" },
-        onDelete: "CASCADE"
+        onDelete: "CASCADE",
+        hooks: true
       },
       status: {
-        type: Sequelize.ENUM("co-host", "member", "pending"),
-        allowNull: false,
-        defaultValue: "pending"
+        type: Sequelize.ENUM('organizer', 'co-host','member','pending'),
+        // defaultValue: "pending"
       },
       createdAt: {
         allowNull: false,
@@ -50,6 +48,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
+    options.tableName = 'Memberships';
     await queryInterface.dropTable(options);
   }
 };

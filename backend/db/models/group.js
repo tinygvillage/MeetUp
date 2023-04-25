@@ -9,8 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 
       Group.belongsTo(models.User, {
         foreignKey: 'organizerId',
-        onDelete: 'CASCADE',
-        hooks: true
+
       });
 
       Group.hasMany(models.Membership, {
@@ -30,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Group.hasMany(models.Event, {
         foreignKey: 'groupId',
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
         hooks: true
       });
     }

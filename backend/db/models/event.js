@@ -1,14 +1,9 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+ 
     static associate(models) {
 
       Event.hasMany(models.EventImage, {
@@ -18,34 +13,34 @@ module.exports = (sequelize, DataTypes) => {
       });
       Event.hasMany(models.Attendance, {
         foreignKey: "eventId",
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
         hooks: true
       });
       Event.belongsTo(models.Venue, {
         foreignKey: "venueId",
-        onDelete: "CASCADE",
-        hooks: true
+
       });
       Event.belongsTo(models.Group, {
         foreignKey: "groupId",
-        onDelete: "CASCADE",
-        hooks: true
-      });
 
+      });
+      Event.belongsToMany(models.User, {
+        through: 'Attendance',
+        foreignKey: 'eventId',
+        otherKey: 'userId',
+        onDelete: "SET NULL",
+        hooks: true
+      })
     }
   }
   Event.init({
     venueId: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: { model: "Venues", key: "id" },
-      onDelete: "CASCADE",
-      hooks: true
+      references: { model: "Venues" },
     },
     groupId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: "Groups", key: "id" },
+      references: { model: "Groups" },
       onDelete: "CASCADE",
       hooks: true
     },
@@ -59,23 +54,44 @@ module.exports = (sequelize, DataTypes) => {
     },
     type: {
       type: DataTypes.ENUM("Online", "In Person"),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isIn: [['Online', 'In person']]
+      }
     },
     capacity: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isInt: true,
+        min: 1
+      }
     },
     price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(4, 2),
       allowNull: true
     },
     startDate: {
       type: DataTypes.DATE,
-      allowNull: false
+      validate: {
+        isDate: true,
+        isInTheFuture(input_date) {
+          if (input_date <= Date()) {
+            throw new Error('Start date must be in the future')
+          }
+        }
+      }
     },
     endDate: {
       type: DataTypes.DATE,
-      allowNull: false
+      validate: {
+        isDate: true,
+        endDateIsAfterStart(input_date) {
+          if (input_date < this.startDate) {
+            throw new Error('End date must come after start date')
+          }
+        }
+      }
     },
   }, {
     sequelize,

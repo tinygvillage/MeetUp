@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {model: "Groups", key: "id"},
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
         hooks: true
       },
       address: {
@@ -31,7 +31,7 @@ module.exports = {
         type: Sequelize.STRING(50)
       },
       state: {
-        type: Sequelize.STRING(50)
+        type: Sequelize.STRING(30)
       },
       lat: {
         type: Sequelize.DECIMAL(4, 8)
@@ -52,6 +52,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
+    options.tableName = 'Venues';
     await queryInterface.dropTable(options);
   }
 };

@@ -9,8 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 
       GroupImage.belongsTo(models.Group, {
         foreignKey: "groupId",
-        onDelete: "CASCADE",
-        hooks: true
+        
       });
     }
   }

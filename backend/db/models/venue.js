@@ -9,21 +9,27 @@ module.exports = (sequelize, DataTypes) => {
 
       Venue.hasMany(models.Event, {
         foreignKey: "venueId",
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
         hooks: true
       });
       Venue.belongsTo(models.Group, {
         foreignKey: "groupId",
-        onDelete: "CASCADE",
+        as: 'Venue',
+        onDelete: 'SET NULL',
         hooks: true
       });
+      Venue.belongsToMany(models.Group, {
+        through: 'Event',
+        foreignKey: 'venueId',
+        otherKey: 'groupId',
+      })
     }
 
     static onlineURLScope() {
       return {
         include: [{
           model: sequelize.models.Group,
-          where: { type: 'Online'}
+          where: { type: 'Online' }
         }],
         attributes: {
           include: [
@@ -38,14 +44,13 @@ module.exports = (sequelize, DataTypes) => {
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: "Groups", key: "id" },
-      onDelete: "CASCADE",
+      references: { model: "Groups" },
+      onDelete: "SET NULL",
       hooks: true
     },
     address: {
       type: DataTypes.STRING(100),
-      allowNull: false,
-      defaultValue: "Online"
+      allowNull: true,
     },
     city: {
       type: DataTypes.STRING(50),
@@ -59,14 +64,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(4, 8),
       allowNull: true,
       validate: {
-        isNumeric: true
+        isNumeric: true,
+        min: -90,
+        max: 90
       }
     },
     lng: {
       type: DataTypes.DECIMAL(4, 8),
       allowNull: true,
       validate: {
-        isNumeric: true
+        isNumeric: true,
+        min: -180,
+        max: 180
       }
     },
   }, {
