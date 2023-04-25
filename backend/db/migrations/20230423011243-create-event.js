@@ -20,22 +20,22 @@ module.exports = {
       },
       venueId: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-        references: { model: "Venues", key: "id" },
-        onDelete: "CASCADE",
+        references: { model: "Venues"},
+        onDelete: "SET NULL",
         hooks: true
       },
       groupId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: "Groups", key: "id" },
-        onDelete: "CASCADE",
+        references: { model: "Groups"},
+        onDelete: "SET NULL",
         hooks: true
       },
       name: {
-        type: Sequelize.STRING(100)
+        type: Sequelize.STRING(100),
+        allowNull: false
       },
       description: {
+        allowNull: false,
         type: Sequelize.TEXT
       },
       type: {
@@ -45,12 +45,14 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       price: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DECIMAL(4,2)
       },
       startDate: {
+        allowNull: false,
         type: Sequelize.DATE
       },
       endDate: {
+        allowNull: false,
         type: Sequelize.DATE
       },
       createdAt: {
@@ -66,6 +68,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
+    options.tableName = 'Events';
     await queryInterface.dropTable(options);
   }
 };

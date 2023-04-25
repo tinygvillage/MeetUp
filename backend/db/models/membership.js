@@ -1,7 +1,6 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Membership extends Model {
 
@@ -9,34 +8,31 @@ module.exports = (sequelize, DataTypes) => {
 
       Membership.belongsTo(models.User, {
         foreignKey: "userId",
-        onDelete: "CASCADE",
-        hooks: true
-      });
-      Membership.belongsTo(models.Group, {
-        foreignKey: "userId",
-        onDelete: "CASCADE",
-        hooks: true
-      });
+
+      }),
+        Membership.belongsTo(models.Group, {
+          foreignKey: "userId",
+
+        });
     }
   }
   Membership.init({
     userId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       unique: true,
-      references: { model: "Users", key: "id" },
-      onDelete: "CASCADE"
+      references: { model: "Users" },
+      // onDelete: "CASCADE"
     },
     groupId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      unique: true,
-      references: { model: "Groups", key: "id" },
-      onDelete: "CASCADE"
+      references: { model: "Groups" },
+      // onDelete: "CASCADE"
     },
     status: {
-      type: DataTypes.ENUM("co-host", "member", "pending"),
-      allowNull: false,
+      type: DataTypes.ENUM('organizer', 'co-host','member','pending'),
+      validate: {
+        isIn: [['organizer', 'co-host','member','pending']]
+      }
     },
   }, {
     sequelize,

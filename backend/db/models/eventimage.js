@@ -1,7 +1,6 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class EventImage extends Model {
 
@@ -9,8 +8,6 @@ module.exports = (sequelize, DataTypes) => {
 
       EventImage.belongsTo(models.Event, {
         foreignKey: "eventId",
-        onDelete: "CASCADE",
-        hooks: true
       });
     }
   }

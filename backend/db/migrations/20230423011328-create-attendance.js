@@ -1,8 +1,7 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
 
-let options = {};
-options.tableName = 'Attendance'; // added april 19, 2023
+let options = {}; // added april 19, 2023
 
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
@@ -11,6 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    options.tableName = 'Attendances';
     await queryInterface.createTable('Attendances', {
       id: {
         allowNull: false,
@@ -20,16 +20,14 @@ module.exports = {
       },
       eventId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: "Events", key: "id" },
-        onDelete: "CASCADE",
+        references: { model: "Events" },
+        onDelete: "SET NULL",
         hooks: true
       },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: "Users", key: "id" },
-        onDelete: "CASCADE",
+        references: { model: "Users" },
+        onDelete: "SET NULL",
         hooks: true
       },
       status: {
@@ -46,9 +44,10 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    },options);
+    }, options);
   },
   async down(queryInterface, Sequelize) {
+    options.tableName = 'Attendances';
     await queryInterface.dropTable(options);
   }
 };

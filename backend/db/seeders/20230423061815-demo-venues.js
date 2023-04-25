@@ -27,19 +27,13 @@ const venues = [
   },
   {
     "groupId": 3,
-    "address": "https://beinglab.com",
-    "city": NULL,
-    "state": NULL,
-    "lat": NULL,
-    "lng": NULL
+    "address": "https://beinglab.com"
+
   },
   {
     "groupId": 2,
-    "address": "https://armonegalaxy.com",
-    "city": NULL,
-    "state": NULL,
-    "lat": NULL,
-    "lng": NULL
+    "address":"https://armonegalaxy.com"
+
   },
 ]
 
@@ -47,10 +41,12 @@ options.tableName = "Venues";
 
 module.exports = {
   async up (queryInterface, Sequelize) {
+    options.tableName = 'Venues';
     await queryInterface.bulkInsert(options, venues);
   },
 
   async down (queryInterface, Sequelize) {
+    options.tableName = 'Venues';
     await queryInterface.bulkDelete(options, venues);
   }
 };
