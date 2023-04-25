@@ -21,13 +21,13 @@ module.exports = {
       eventId: {
         type: Sequelize.INTEGER,
         references: { model: "Events" },
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
         hooks: true
       },
       userId: {
         type: Sequelize.INTEGER,
         references: { model: "Users" },
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
         hooks: true
       },
       status: {
