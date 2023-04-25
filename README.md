@@ -2,18 +2,9 @@
 
 ## Database Schema Design
 
-<<<<<<< HEAD
-`meetup`
-=======
 ![meetup-dbdiagram]
 
-<<<<<<< HEAD
-[meetup-dbdiagram]: ../assets/meetup_dbdiagram.png
->>>>>>> dev
-=======
-[meetup-dbdiagram]: ../../02_2022_FT_Online_Cohort/04_December_Cohort/mod4/mod4_docs_for_stoods/assets/meetup_dbdiagram.png
-
->>>>>>> dev
+[meetup-dbdiagram]: ./assets/images/meetup_dbdiagram.png
 
 ## API Documentation
 
