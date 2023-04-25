@@ -2,51 +2,36 @@
 /** @type {import('sequelize-cli').Migration} */
 
 let options = {};
-options.tableName = 'Groups'; // added april 19, 2023
+options.tableName = 'EventImage'; // added april 19, 2023
 
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
 }
 
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Groups', {
+    await queryInterface.createTable('EventImages', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      organizerId: {
+      eventId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        reference: { model: "Users", key: "id" },
-        onDelete: 'CASCADE'
+        references: { model: "Events", key: "id" },
+        onDelete: "CASCADE",
+        hooks: true
       },
-      name: {
-        type: Sequelize.STRING(30),
+      url: {
         allowNull: false,
-        unique: true
+        type: Sequelize.STRING
       },
-      about: {
-        type: Sequelize.TEXT,
-        allowNull: false
-      },
-      type: {
-        type: Sequelize.ENUM("Online", "In Person"),
-        defaultValue: null
-      },
-      private: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false
-      },
-      city: {
-        type: Sequelize.STRING(30),
-        allowNull: false
-      },
-      state: {
-        type: Sequelize.STRING(25),
-        allowNull: false
+      preview: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -61,6 +46,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
+    options.tableName = 'EventImages';
     await queryInterface.dropTable(options);
   }
 };

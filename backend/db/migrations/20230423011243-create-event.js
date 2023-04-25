@@ -2,51 +2,58 @@
 /** @type {import('sequelize-cli').Migration} */
 
 let options = {};
-options.tableName = 'Groups'; // added april 19, 2023
+options.tableName = 'Events'; // added april 19, 2023
 
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
 }
 
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Groups', {
+    await queryInterface.createTable('Events', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      organizerId: {
+      venueId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        reference: { model: "Users", key: "id" },
-        onDelete: 'CASCADE'
+        references: { model: "Venues"},
+        onDelete: "SET NULL",
+        hooks: true
+      },
+      groupId: {
+        type: Sequelize.INTEGER,
+        references: { model: "Groups"},
+        onDelete: "SET NULL",
+        hooks: true
       },
       name: {
-        type: Sequelize.STRING(30),
-        allowNull: false,
-        unique: true
-      },
-      about: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING(100),
         allowNull: false
+      },
+      description: {
+        allowNull: false,
+        type: Sequelize.TEXT
       },
       type: {
         type: Sequelize.ENUM("Online", "In Person"),
-        defaultValue: null
       },
-      private: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false
+      capacity: {
+        type: Sequelize.INTEGER
       },
-      city: {
-        type: Sequelize.STRING(30),
-        allowNull: false
+      price: {
+        type: Sequelize.DECIMAL(4,2)
       },
-      state: {
-        type: Sequelize.STRING(25),
-        allowNull: false
+      startDate: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      endDate: {
+        allowNull: false,
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -61,6 +68,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
+    options.tableName = 'Events';
     await queryInterface.dropTable(options);
   }
 };

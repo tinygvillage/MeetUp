@@ -4,13 +4,28 @@ const { Model, Validator } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+
     static associate(models) {
-      User.hasMany(models.Group, { foreignKey: "organizerId", onDelete: "CASCADE", hooks: true });
+      User.hasMany(models.Group, {
+        foreignKey: "organizerId",
+        as: 'Organizer',
+      })
+      User.hasMany(models.Membership, {
+        foreignKey: "userId",
+      })
+      User.hasMany(models.Attendance, {
+        foreignKey: "userId",
+      })
+      User.belongsToMany(models.Group, {
+        through: 'Membership',
+        foreignKey: 'userId',
+        otherKey: 'groupId'
+      })
+      User.belongsToMany(models.Event, {
+        through: 'Attendance',
+        foreignKey: 'userId',
+        otherKey: 'eventId'
+      })
     }
   }
   User.init(
@@ -20,23 +35,23 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: [1, 30],
-          isNotEmail(value) {
-            if (Validator.isEmail(value)) {
-              throw new Error("Cannot be an email.");
+            isNotEmail(value) {
+              if (Validator.isEmail(value)) {
+                throw new Error("Cannot be an email.");
+              }
             }
-          }
         }
       },
       lastName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [2, 30],
-          isNotEmail(value) {
-            if (Validator.isEmail(value)) {
-              throw new Error("Cannot be an email.");
+          len: [1, 30],
+            isNotEmail(value) {
+              if (Validator.isEmail(value)) {
+                throw new Error("Cannot be an email.");
+              }
             }
-          }
         }
       },
       username: {

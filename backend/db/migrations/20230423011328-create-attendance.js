@@ -1,51 +1,37 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
 
-let options = {};
-options.tableName = 'Groups'; // added april 19, 2023
+let options = {}; // added april 19, 2023
 
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
 }
 
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Groups', {
+    options.tableName = 'Attendances';
+    await queryInterface.createTable('Attendances', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      organizerId: {
+      eventId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        reference: { model: "Users", key: "id" },
-        onDelete: 'CASCADE'
+        references: { model: "Events" },
+        onDelete: "SET NULL",
+        hooks: true
       },
-      name: {
-        type: Sequelize.STRING(30),
-        allowNull: false,
-        unique: true
+      userId: {
+        type: Sequelize.INTEGER,
+        references: { model: "Users" },
+        onDelete: "SET NULL",
+        hooks: true
       },
-      about: {
-        type: Sequelize.TEXT,
-        allowNull: false
-      },
-      type: {
-        type: Sequelize.ENUM("Online", "In Person"),
-        defaultValue: null
-      },
-      private: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false
-      },
-      city: {
-        type: Sequelize.STRING(30),
-        allowNull: false
-      },
-      state: {
-        type: Sequelize.STRING(25),
+      status: {
+        type: Sequelize.ENUM("pending", "attending", "waitlist"),
         allowNull: false
       },
       createdAt: {
@@ -61,6 +47,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
+    options.tableName = 'Attendances';
     await queryInterface.dropTable(options);
   }
 };
