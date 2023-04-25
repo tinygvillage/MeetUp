@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
 
       Event.hasMany(models.EventImage, {
         foreignKey: "eventId",
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
         hooks: true
       });
       Event.hasMany(models.Attendance, {
