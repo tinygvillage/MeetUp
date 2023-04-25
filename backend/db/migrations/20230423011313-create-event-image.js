@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 
 let options = {};
-options.tableName = 'EventImage'; // added april 19, 2023
+options.tableName = 'EventImages'; // added april 19, 2023
 
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
@@ -22,8 +22,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: "Events", key: "id" },
-        onDelete: "CASCADE",
-        hooks: true
+        // onDelete: "CASCADE",
+        // hooks: true
       },
       url: {
         allowNull: false,

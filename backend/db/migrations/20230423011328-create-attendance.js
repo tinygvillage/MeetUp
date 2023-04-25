@@ -2,6 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 
 let options = {}; // added april 19, 2023
+options.tableName = 'Attendances';
 
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
@@ -10,7 +11,6 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    options.tableName = 'Attendances';
     await queryInterface.createTable('Attendances', {
       id: {
         allowNull: false,
@@ -21,14 +21,14 @@ module.exports = {
       eventId: {
         type: Sequelize.INTEGER,
         references: { model: "Events" },
-        onDelete: "CASCADE",
-        hooks: true
+        // onDelete: "CASCADE",
+        // hooks: true
       },
       userId: {
         type: Sequelize.INTEGER,
         references: { model: "Users" },
-        onDelete: "CASCADE",
-        hooks: true
+        // onDelete: "CASCADE",
+        // hooks: true
       },
       status: {
         type: Sequelize.ENUM("pending", "attending", "waitlist"),
