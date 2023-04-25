@@ -22,13 +22,13 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: { model: 'Events' },
         onDelete: "CASCADE",
-        // hooks: true
+        hooks: true
       },
       userId: {
         type: Sequelize.INTEGER,
         references: { model: "Users" },
         onDelete: "CASCADE",
-        // hooks: true
+        hooks: true
       },
       status: {
         type: Sequelize.ENUM("pending", "attending", "waitlist"),
