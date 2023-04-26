@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Group.hasMany(models.Event, {
         foreignKey: 'groupId',
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
         hooks: true
       });
     }
