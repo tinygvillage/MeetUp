@@ -12,7 +12,7 @@ const groups = [
     organizerId: 1,
     name: "Refusion Activation Method Guild",
     about: "A network of individuals that have committed themselves to the refusion lifestyle and practices.",
-    type: "In person",
+    type: "In Person",
     private: true,
     city: "Arcata",
     state: "CA",
