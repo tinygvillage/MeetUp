@@ -21,8 +21,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'Events', key: "id" },
-        onDelete: "CASCADE",
-        hooks: true
+        // onDelete: "CASCADE",
+        // hooks: true
       },
       url: {
         allowNull: false,
