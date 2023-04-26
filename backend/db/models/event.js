@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         through: 'Attendance',
         foreignKey: 'eventId',
         otherKey: 'userId',
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
         hooks: true
       })
     }
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     groupId: {
       type: DataTypes.INTEGER,
       references: { model: "Groups" },
-      onDelete: "CASCADE",
+      onDelete: "SET NULL",
       hooks: true
     },
     name: {
