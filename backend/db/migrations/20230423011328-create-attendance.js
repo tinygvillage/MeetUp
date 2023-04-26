@@ -21,13 +21,13 @@ module.exports = {
       eventId: {
         type: Sequelize.INTEGER,
         references: { model: 'Events' },
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
         hooks: true
       },
       userId: {
         type: Sequelize.INTEGER,
         references: { model: "Users" },
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
         hooks: true
       },
       status: {
@@ -48,7 +48,6 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     options.tableName = 'Attendances';
-    await Sequelize.query("ALTER TABLE meetup_schema.'Attendances' DROP CONSTRAINT 'Attendances_eventId_fkey'")
     await queryInterface.dropTable(options);
   }
 };

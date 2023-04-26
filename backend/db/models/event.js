@@ -8,12 +8,12 @@ module.exports = (sequelize, DataTypes) => {
 
       Event.hasMany(models.EventImage, {
         foreignKey: "eventId",
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
         hooks: true
       });
       Event.hasMany(models.Attendance, {
         foreignKey: "eventId",
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
         hooks: true
       });
       Event.belongsTo(models.Venue, {
@@ -28,8 +28,6 @@ module.exports = (sequelize, DataTypes) => {
         through: 'Attendance',
         foreignKey: 'eventId',
         otherKey: 'userId',
-        onDelete: "SET NULL",
-        hooks: true
       })
     }
   }
@@ -41,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     groupId: {
       type: DataTypes.INTEGER,
       references: { model: "Groups" },
-      onDelete: "SET NULL",
+      onDelete: "CASCADE",
       hooks: true
     },
     name: {
