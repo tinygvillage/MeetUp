@@ -21,14 +21,14 @@ module.exports = {
       venueId: {
         type: Sequelize.INTEGER,
         references: { model: "Venues"},
-        // onDelete: "SET NULL",
-        // hooks: true
+        onDelete: "SET NULL",
+        hooks: true
       },
       groupId: {
         type: Sequelize.INTEGER,
         references: { model: "Groups"},
-        // onDelete: "SET NULL",
-        // hooks: true
+        onDelete: "SET NULL",
+        hooks: true
       },
       name: {
         type: Sequelize.STRING(100),
