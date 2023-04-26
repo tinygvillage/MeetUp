@@ -41,11 +41,11 @@ module.exports = {
         allowNull: false
       },
       city: {
-        type: Sequelize.STRING(30),
+        type: Sequelize.STRING(100),
         allowNull: false
       },
       state: {
-        type: Sequelize.STRING(25),
+        type: Sequelize.STRING(100),
         allowNull: false
       },
       createdAt: {
