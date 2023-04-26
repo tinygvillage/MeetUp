@@ -48,6 +48,7 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     options.tableName = 'Attendances';
+    await Sequelize.query("ALTER TABLE meetup_schema.'Attendances' DROP CONSTRAINT 'Attendances_eventId_fkey'")
     await queryInterface.dropTable(options);
   }
 };

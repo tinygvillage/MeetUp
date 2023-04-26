@@ -47,6 +47,7 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     options.tableName = 'EventImages';
+    await Sequelize.query("ALTER TABLE meetup_schema.'EventImages' DROP CONSTRAINT 'EventImages_eventId_fkey'")
     await queryInterface.dropTable(options);
   }
 };
