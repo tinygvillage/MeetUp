@@ -46,14 +46,16 @@ const groups = [
   },
 ]
 
-options.tableName = "Groups"
+
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    options.tableName = "Groups"
     await queryInterface.bulkInsert(options, groups)
   },
 
   async down(queryInterface, Sequelize) {
+    options.tableName = "Groups"
     await queryInterface.bulkDelete(options, groups)
   }
 };

@@ -37,7 +37,6 @@ const venues = [
   },
 ]
 
-options.tableName = "Venues";
 
 module.exports = {
   async up (queryInterface, Sequelize) {

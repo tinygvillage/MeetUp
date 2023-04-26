@@ -31,14 +31,15 @@ const groupImages = [
   },
 ]
 
-options.tableName = "GroupImages";
 
 module.exports = {
   async up (queryInterface, Sequelize) {
+    options.tableName = "GroupImages";
     await queryInterface.bulkInsert(options, groupImages);
   },
 
   async down (queryInterface, Sequelize) {
+    options.tableName = "GroupImages";
     await queryInterface.bulkDelete(options, groupImages);
   }
 };
