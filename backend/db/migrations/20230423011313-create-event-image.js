@@ -2,7 +2,6 @@
 /** @type {import('sequelize-cli').Migration} */
 
 let options = {};
-options.tableName = 'EventImages'; // added april 19, 2023
 
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
@@ -22,7 +21,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'Events', key: "id" },
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
         hooks: true
       },
       url: {
@@ -47,7 +46,6 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     options.tableName = 'EventImages';
-    await Sequelize.query("ALTER TABLE meetup_schema.'EventImages' DROP CONSTRAINT 'EventImages_eventId_fkey'")
     await queryInterface.dropTable(options);
   }
 };
