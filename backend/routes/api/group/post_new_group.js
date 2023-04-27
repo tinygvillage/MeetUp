@@ -1,15 +1,9 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
+const router = require('express').Router();
+const { Group } = require('../../../db/models');
 
-const { requireAuth } = require('../../utils/auth');
-const { Op } = require('sequelize');
+const { requireAuth } = require('../../../utils/auth');
+const { validateGroupCreation } = require('../../../utils/validation');
 
-const router = express.Router();
-
-const { check } = require('express-validator');
-const { authorizedUser, validateGroupCreation } = require('../../utils/validation');
-
-const { Group, User } = require('../../db/models');
 
 // need requirAuth to verify user IS logged in
 router.post('/', requireAuth, validateGroupCreation, async (req, res, next) => {
@@ -41,16 +35,6 @@ router.post('/', requireAuth, validateGroupCreation, async (req, res, next) => {
         return res.status(200).json(newGroup)
 
     }
-})
-
-router.get('', async (req, res, next) => {
-
-    const Groups = await Group.unscoped().findAll();
-    
-
-    if (!Groups) next(err);
-
-    res.status(200).json({ Groups })
 })
 
 module.exports = router;
