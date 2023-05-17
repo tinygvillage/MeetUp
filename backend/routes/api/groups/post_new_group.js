@@ -2,11 +2,11 @@ const router = require('express').Router();
 const { Group } = require('../../../db/models');
 
 const { requireAuth } = require('../../../utils/auth');
-const { validateGroupCreation } = require('../../../utils/validation');
+const { validateGroup } = require('../../../utils/validation');
 
 
 // need requirAuth to verify user IS logged in
-router.post('/', requireAuth, validateGroupCreation, async (req, res, next) => {
+router.post('/', requireAuth, validateGroup, async (req, res, next) => {
     // const { user } = req; // not necessary because requireAuth verified user already
     // const user = await authorizedUser(req, res, next);
     const { name, about, type, private, city, state } = req.body;
