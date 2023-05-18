@@ -27,4 +27,4 @@ const authorizedUser = async (req, _res, next) => {
     return user;
 }
 
-module.exports = {authorizedUser};
+module.exports = { authorizedUser };
