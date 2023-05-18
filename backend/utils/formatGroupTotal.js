@@ -1,87 +1,38 @@
 const { formatDate } = require("./formatDate");
 const { Group, Membership, GroupImage, Venue, User } = require('../db/models');
 
-// function formatGroupTotal(groupArray) {
+async function formatGroupTotal(group) {
 
-//     return groupArray.map(async group => {
-//         const { id, organizerId, name, about, type, private, city, state, createdAt, updatedAt } = group;
-//         const numMembers = group.Memberships.length;
+    const { id, organizerId, name, about, type, private, city, state, createdAt, updatedAt } = group;
 
-//         // const user = await User.findByPk(organizerId);
-//         // const venue = await Venue.findOne({
-//         //     where: { groupId: group.id }
-//         // })
+    const createdAtReFormatted = formatDate(createdAt);
+    const updatedAtReFormatted = formatDate(updatedAt);
 
-//         const createdAtReFormatted = formatDate(createdAt);
-//         const updatedAtReFormatted = formatDate(updatedAt);
+    const numMembers = group.Memberships.length;
 
-//         return {
-//             id,
-//             organizerId,
-//             name,
-//             about,
-//             type,
-//             private,
-//             city,
-//             state,
-//             createdAt: createdAtReFormatted,
-//             updatedAt: updatedAtReFormatted,
-//             numMembers,
-//             GroupImages: group.GroupImages,
-//             Organizer: group.Users,
-//             Venues: group.Venues
-//         }
-//     })
-// };
+    const GroupImages = group.GroupImages;
 
-// module.exports = { formatGroupTotal };
+    const Organizer = await User.findByPk(organizerId, {
+        attributes: ["id", "firstName", "lastName"]
+    });
+    const Venues = group.Venues;
 
+    return {
+        id,
+        organizerId,
+        name,
+        about,
+        type,
+        private,
+        city,
+        state,
+        createdAt: createdAtReFormatted,
+        updatedAt: updatedAtReFormatted,
+        numMembers,
+        GroupImages,
+        Organizer,
+        Venues
+    }
+};
 
-async function formatGroupTotal(groupArray) {
-    const formattedGroups = await Promise.all(
-      groupArray.map(async (group) => {
-        const {
-          id,
-          organizerId,
-          name,
-          about,
-          type,
-          private,
-          city,
-          state,
-          createdAt,
-          updatedAt,
-        } = group;
-        const numMembers = group.Memberships.length;
-
-        const createdAtReFormatted = formatDate(createdAt);
-        const updatedAtReFormatted = formatDate(updatedAt);
-
-        const [organizer, venue] = await Promise.all([
-          User.findByPk(organizerId),
-          Venue.findOne({ where: { groupId: id } }),
-        ]);
-
-        return {
-          id,
-          organizerId,
-          name,
-          about,
-          type,
-          private,
-          city,
-          state,
-          createdAt: createdAtReFormatted,
-          updatedAt: updatedAtReFormatted,
-          numMembers,
-          GroupImages: group.GroupImages,
-          Organizer: organizer,
-          Venues: venue,
-        };
-      })
-    );
-
-    return formattedGroups;
-  }
-
-  module.exports = { formatGroupTotal };
+module.exports = { formatGroupTotal };
