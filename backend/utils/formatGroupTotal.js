@@ -4,6 +4,7 @@ const { Group, Membership, GroupImage, Venue, User } = require('../db/models');
 async function formatGroupTotal(group) {
 
     const { id, organizerId, name, about, type, private, city, state, createdAt, updatedAt } = group;
+
     const createdAtReFormatted = formatDate(createdAt);
     const updatedAtReFormatted = formatDate(updatedAt);
 
