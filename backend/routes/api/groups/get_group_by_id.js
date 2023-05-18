@@ -8,16 +8,22 @@ router.get('/:groupId', async (req, res, next) => {
 
     const group = await Group.findOne({
       where: { id: groupId },
-      include: [{ model: GroupImage }, { model: Membership }, { model: Venue }, { model: User }]
+      include: [
+        { model: GroupImage, attributes: ["id", "url", "preview"] },
+        { model: Membership },
+        { model: User, attributes: ["id", "firstName", "lastName"] },
+        { model: Venue },
+      ]
     });
 
     if (!group) {
-      return res.status(404).json({ message: "Group not found" });
+      return res.status(404).json({ message: "Group couldn't be found" });
     }
 
-    const groupInfo = formatGroupTotal(group)
+    const groupInfo = await formatGroupTotal(group)
 
     return res.status(200).json(groupInfo);
+    // return res.status(200).json(group);
 
   } catch (error) {
     next(error);
