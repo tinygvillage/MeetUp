@@ -15,9 +15,9 @@ router.get('/current', requireAuth, async (req, res, next) => {
 
     if (!groups) next(err)
 
-    const groupInfo = await formatGroup(groups);
+    const groupInfo = formatGroup(groups);
 
-    return res.status(200).json({ "Groups": groupInfo });
+    return res.status(200).json({ Groups: groupInfo });
 });
 
 module.exports = router;
