@@ -23,8 +23,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    preview: DataTypes.BOOLEAN,
-    allowNull: false
+    preview: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'GroupImage',
