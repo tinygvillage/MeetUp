@@ -8,6 +8,8 @@ const router = require('express').Router();
 
 // ============== GET ==============
 
+// remember ** order still matters even though they're imported
+
 const getAllGroups = require('./get_all_groups');
 router.use(getAllGroups);
 
