@@ -7,12 +7,15 @@ const { restoreUser } = require('../../../utils/auth');
 
 
 // ============== GET ==============
+const getAllGroups = require('./get_all_groups.js');
+router.use('/', getAllGroups);
+
+const getAllGroupsByCurrentUser = require('./get_all_groups_joined_organized_current_user');
+router.use('/current', getAllGroupsByCurrentUser);
+
 
 const getGroupById = require('./get_group_by_id.js');
 router.use('/:id', getGroupById);
-
-const getAllGroups = require('./get_all_groups.js');
-router.use('/', getAllGroups);
 
 
 

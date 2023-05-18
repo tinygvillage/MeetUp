@@ -6,7 +6,7 @@ const { Group } = require('../../../db/models')
 router.get('/:groupId', async (req, res, next) => {
     try {
       const { groupId } = req.params;
-      const group = await Group.findByPk(id);
+      const group = await Group.findByPk(groupId);
 
       if (!group) {
         return res.status(404).json({ message: "Group not found" });
