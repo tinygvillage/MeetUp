@@ -16,19 +16,22 @@ const { GroupImage, Group } = require('../../../db/models')
 //     })
 // })
 
-router.post('/:id/images', requireAuth, async (req, res, next) => {
-    const { id } = req.params;
+router.post('/:groupId/images', requireAuth, async (req, res, next) => {
+    const { groupId } = req.params;
 
-    const findImage = await GroupImage.findByPk({
-        where: id
-    });
+    // current user must be the organizer for the group
+    // create a helper function to check status
+
+    const findGroup = await Group.findByPk(groupId);
 
 
-    if (!findImage) res.status(404).json({ message: "Image Not Found" });
+    if (!findGroup) res.status(404).json({ message: "Group couldn't be found" });
 
 
     res.status(200).json({
-        id: id.url
+        id: groupId,
+        url,
+        preview
     })
 });
 
