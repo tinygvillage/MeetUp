@@ -6,7 +6,7 @@ const { setTokenCookie } = require('../../../utils/auth.js');
 const { validateSignup } = require('../../../utils/validation.js');
 
 //sequelize
-const { User } = require('../../../db/models');
+const { User } = require('../../../db/models/index.js');
 const { Op } = require('sequelize');
 
 // signup endpoint
