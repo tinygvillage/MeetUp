@@ -25,7 +25,7 @@ router.use(getGroupById);
 const postNewImageToGroup = require('./post_new_image_to_group');
 router.use(postNewImageToGroup);
 
-const postNewGroup = require('./post_new_group.js');
+const postNewGroup = require('./post_create_a_group.js');
 router.use(postNewGroup);
 
 // ============== PUT ==============
